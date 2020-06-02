@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>侦听器</title>
+</head>
+<body>
+    <div id="app">
+        用户名：<input type="text" v-model.lazy="uname">&nbsp;&nbsp;
+        <span>{{tip}}</span>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script>
+const vm = new Vue({
+    el:'#app',
+    data:{
+        uname:'',
+        tip:''
+    },
+    methods: {
+        checkName(val){
+            const that = this
+            setTimeout(() => {
+                if(val == 'admin'){
+                    that.tip = '用户名已经存在'
+                }else{
+                    that.tip = '用户名可以使用'
+                }
+            }, 2000);
+        }
+    },
+    watch:{
+        uname : function(val){
+            this.checkName(val)
+            this.tip = '正在验证……'
+        }
+    }
+})
+</script>
+</html>

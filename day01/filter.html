@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>过滤器</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="msg">
+        <div>{{msg | upper}}</div>
+        <div>{{msg | lower | upper}}</div>
+        <div>{{date | format('yyyy-MM-dd hh:mm:ss')}}</div>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script src="js/time.js"></script>
+<script>
+Vue.filter('upper', function(val){
+    return val.charAt(0).toUpperCase() + val.slice(1)
+})
+const vm = new Vue({
+    el:'#app',
+    data:{
+        msg:'',
+        date:new Date()
+    },
+    filters:{
+        'lower':function(val){
+            return val.charAt(0).toLowerCase() + val.slice(1).toUpperCase()
+        },
+        'format':function(val, ...args){
+            // if(args[0] && args[0] == 'yyyy-MM-dd'){
+            //     return val.getFullYear()+'-'+(val.getMonth()+1)+'-'+val.getDate()
+            // }
+            if(args[0]){
+                return dateFormat(val, args[0])
+            }
+            return val
+        }
+    },
+    methods: {
+        checkName(val){
+            const that = this
+            setTimeout(() => {
+                if(val == 'admin'){
+                    that.tip = '用户名已经存在'
+                }else{
+                    that.tip = '用户名可以使用'
+                }
+            }, 2000);
+        }
+    }
+})
+</script>
+</html>

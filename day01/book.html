@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+      .grid {
+        margin: auto;
+        width: 530px;
+        text-align: center;
+      }
+      .grid table {
+        border-top: 1px solid #C2D89A;
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .grid th,td {
+        padding: 10;
+        border: 1px dashed #F3DCAB;
+        height: 35px;
+        line-height: 35px;
+      }
+      .grid th {
+        background-color: #F3DCAB;
+      }
+      .grid .book {
+        padding-bottom: 10px;
+        padding-top: 5px;
+        background-color: #F3DCAB;
+      }
+      .grid .total {
+        height: 30px;
+        line-height: 30px;
+        background-color: #F3DCAB;
+        border-top: 1px solid #C2D89A;
+      }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="grid">
+            <div>
+                <h1>图书管理</h1>
+                <div class="book">
+                    <div>
+                        <label for="id">编号：</label>
+                        <input type="text" v-model="id" :disabled="isEdit" v-focus>
+                        <label for="name">名称：</label>
+                        <input type="text" v-model="name">
+                        <button @click='handle' :disabled="submitFlag">提交</button>
+                    </div>
+                </div>
+            </div>
+            <div class="total">
+              <span>图书总数：</span>
+              <span>{{total}}</span>
+            </div>
+            <table>
+                <thead>
+                  <tr>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>时间</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in books" :key="item.id">
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.date | format('yyyy-MM-dd hh:mm:ss')}}</td>
+                    <td>
+                      <a href="" @click.prevent='toEdit(item.id)'>修改</a>
+                      <span>|</span>
+                      <a href="" @click.prevent='deleteBook(item.id)'>删除</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+        
+        </div>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script src="js/time.js"></script>
+<script>
+    Vue.directive('focus', {
+      inserted : function(el){
+        el.focus()
+      }
+    })
+    const vm = new Vue({
+        el : '#app',
+        data : {
+            id : '',
+            name : '',
+            isEdit : false,
+            submitFlag: false,
+            books : []
+        },
+        filters : {
+          format : function(val, ...args){
+            return dateFormat(val, args[0])
+          }
+        },
+        methods: {
+            handle(){
+              const that = this
+              if (that.id == '' || that.name == '') {
+                alert('数据不能为空')
+                return
+              }
+              if (that.isEdit) {
+                that.books.some(item=>{
+                  if (item.id == that.id) {
+                    item.name = that.name
+                  }
+                })
+                that.isEdit = false
+              }else{
+                let flag = that.books.some(item=>item.id == that.id)
+                if (flag) {
+                  alert('这个id已经存在了')
+                  return
+                }
+                const book = {
+                  'id':that.id,
+                  'name':that.name,
+                  'date':new Date()
+                }
+                that.books.push(book)
+              }
+              that.id = ''
+              that.name = ''
+            },
+            toEdit(id){
+              const book = this.books.find(item=>item.id==id)
+              this.id = book.id
+              this.name = book.name
+              this.isEdit = true
+            },
+            deleteBook(id){
+                if ( ! confirm('确定要删除吗？')) {
+                    return
+                }
+                let index = this.books.findIndex(item=>item.id == id)
+                this.books.splice(index, 1)
+            },
+            loadData(){
+                const that = this
+                setTimeout(() => {
+                    const books = [{
+                        id: 1,
+                        name: '三国演义',
+                        date: '2020-1-26 23:25:16'
+                        },{
+                        id: 2,
+                        name: '水浒传',
+                        date: '2020-1-26 23:35:11'
+                        },{
+                        id: 3,
+                        name: '红楼梦',
+                        date: '2020-2-26 20:11:16'
+                        },{
+                        id: 4,
+                        name: '西游记',
+                        date: '2020-2-26 23:21:16'
+                    }]
+                    that.books = books
+                }, 1000);
+            }
+        },
+        watch: {
+          name : function(val){
+            // 验证图书名称是否已经存在
+            let flag = this.books.some(item=>item.name == val)
+            console.log('flag='+flag)
+            if (!flag) {
+              // 图书名称存在
+              this.submitFlag = false
+            }else{
+              // 图书名称不存在
+              this.submitFlag = true
+            }
+          }
+        },
+        mounted() {
+            this.loadData()
+        },
+        computed: {
+          total(){
+            return this.books.length
+          }
+        }
+    })
+</script>
+</html>
