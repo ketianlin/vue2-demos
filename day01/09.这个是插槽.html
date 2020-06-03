@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <test-solt>这个没有错</test-solt><hr>
+        <test-solt></test-solt><hr>
+        <test-solt>
+            <p>这个是在内容</p>
+            <p>这个是在内容</p>
+            <p>这个是在内容</p>
+            <template slot="tom">
+                <p>是卡卡打开士大夫撒旦</p>
+            </template>
+            <template slot="jerry">
+                <p>vvvvvvvv订单</p>
+            </template>
+        </test-solt>
+    </div>
+</body>
+<script src="./js/vue.js"></script>
+<script>
+    Vue.component('test-solt',{
+        template : `
+            <div>
+                <div>这个是子组件</div>
+                <slot name="tom">我是tom</slot>
+                <slot name="jerry">我是jerry</slot>
+                <slot>我是默认值</slot>
+                
+            </div>
+        `
+    })
+    const vm = new Vue({
+        el : '#app',
+        components: {
+            
+        }
+    })
+</script>
+</html>

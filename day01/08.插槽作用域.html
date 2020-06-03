@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        ul li {cursor: pointer;}
+        .current {color: chartreuse;font-size: 16px;}
+
+    </style>
+</head>
+<body>
+    <div id="app">
+        <list-solt @slot-click="handle($event)" :list="list">
+
+            <template slot-scope="slotScope">
+                <strong v-if="slotScope.item.id==curId" class="current">{{slotScope.item.name}}</strong>
+                <span v-else>{{slotScope.item.name}}</span>
+            </template>
+        </list-solt>
+    </div>
+</body>
+<script src="./js/vue.js"></script>
+<script>
+    Vue.component('list-solt',{
+        props : ['list'],
+        template : `
+            <div>
+                <ul>
+                    <li @click='$emit("slot-click", item.id)' v-for="(item,index) in list" :key="index">
+                        <slot :item="item">{{item.name}}</slot>
+                    </li>
+                </ul>
+            </div>
+        `
+    })
+    const vm = new Vue({
+        el : '#app',
+        components: {
+            
+        },
+        methods: {
+            handle(val){
+                if (val == this.curId) {
+                    this.curId = 0
+                }else{
+                    this.curId = val
+                }
+            }
+        },
+        data : {
+            curId : 0,
+            list : [
+                {
+                    id:1,
+                    name:'苹果'
+                },
+                {
+                    id:2,
+                    name:'香蕉'
+                },
+                {
+                    id:3,
+                    name:'菠萝'
+                },
+                {
+                    id:4,
+                    name: '西瓜'
+                }
+            ]
+        }
+    })
+</script>
+</html>
