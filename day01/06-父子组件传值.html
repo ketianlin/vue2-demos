@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>父子组件传值</title>
+</head>
+<body>
+    <div id="app">
+        <div :style='{fontSize:fontSize+"px"}'>{{msg}}</div>
+        <menu-item :parr="parr" @enlarge-text-2='handle2($event)' @enlarge-text='handle($event)'></menu-item>
+    </div>
+</body>
+<script src="./js/vue.js"></script>
+<script>
+    Vue.component('menu-item', {
+        props : ['parr'],
+        template : `
+            <div>
+                <ul>
+                    <li :key="index" v-for="(item,index) in parr">{{item}}</li>
+                </ul>
+                <button @click='$emit("enlarge-text",5)'>点击1</button>
+                <button @click='$emit("enlarge-text",10)'>点击2</button>
+                <button @click='$emit("enlarge-text-2",5)'>点击3</button>
+                <button @click='$emit("enlarge-text-2",10)'>点击4</button>
+            </div>
+        `
+    })
+    const vm = new Vue({
+        el : '#app',
+        data : {
+            parr : ['apple', 'orange', 'banana'],
+            msg : '这个是父组件的数据',
+            fontSize : 5
+        },
+        methods: {
+            handle(val){
+                this.fontSize += val
+            },
+            handle2(val){
+                this.fontSize -= val
+            }
+        }
+    })
+</script>
+</html>
