@@ -115,6 +115,8 @@
                 that.books.some(item=>{
                   if (item.id == that.id) {
                     item.name = that.name
+                    // 终止遍历
+                    return true
                   }
                 })
                 that.isEdit = false
