@@ -8,7 +8,7 @@ mongoose.connect('mongodb://localhost/playground', {useNewUrlParser: true, useUn
     .then(()=>console.log('数据库连接成功'))
     // 连接失败
     .catch(err => console.log(err, '数据库连接失败'));
-    
+
 // 创建集合规则
 const courseSchema = new mongoose.Schema({
     name: String,
