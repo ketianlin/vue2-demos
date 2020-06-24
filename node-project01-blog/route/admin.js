@@ -27,6 +27,8 @@ admin.post('/login', async (req, res)=>{
     if (user) {
         let isValid = await bcrypt.compare(password, user.password);
         if (isValid) {
+            // 将用户名存储在请求对象中
+            req.session.username = user.username;
             return res.send('登录成功');
         }
     }
