@@ -1,6 +1,8 @@
 const { User } = require('../../model/user');
 
 module.exports = async(req, res) => {
+    // 标识 标识当前访问的是用户管理页面
+    req.app.locals.currentLink = 'user';
     // 获取到地址栏中的id参数
     const { id, message } = req.query;
     // 如果当前传递了id参数
