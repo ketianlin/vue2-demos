@@ -13,7 +13,13 @@ require('./model/coonect');
 // 处理post请求参数
 app.use(bodyPaser.urlencoded({extended: false}));
 // 配置session
-app.use(session({secret : 'secret key'}))
+app.use(session({
+    secret: 'secret key',
+	saveUninitialized: false,
+	cookie: {
+		maxAge: 24 * 60 * 60 * 1000
+	}
+}))
 
 // 告诉express框架模板所在的位置
 app.set('views', path.join(__dirname, 'views'));
@@ -25,12 +31,30 @@ app.engine('art', require('express-art-template'));
 // 开放静态资源文件
 app.use(express.static(path.join(__dirname, 'public')))
 
+// 引入路由模块
 const home = require('./route/home');
 const admin = require('./route/admin');
 
-app.use('/home', home);
+// 拦截请求 判断用户登录状态
+app.use('/admin', require('./middleware/loginGuard'));
 
+// 为路由匹配请求路径
+app.use('/home', home);
 app.use('/admin', admin);
+
+app.use((err, req, res, next) => {
+	// 将字符串对象转换为对象类型
+	// JSON.parse() 
+	const result = JSON.parse(err);
+	// res.redirect(`${result.path}?message=${result.message}`);
+	let params = [];
+	for (let attr in result) {
+		if (attr != 'path') {
+			params.push(attr + '=' + result[attr]);
+		}
+	}
+	res.redirect(`${result.path}?${params.join('&')}`);
+})
 
 // 监听端口
 app.listen(80);
