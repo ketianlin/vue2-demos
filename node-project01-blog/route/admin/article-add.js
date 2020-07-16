@@ -3,7 +3,7 @@ const formidable = require('formidable');
 const path = require('path');
 const { Article } = require('../../model/article');
 
-module.exports = (req, res)=>{
+module.exports = (req, res, next)=>{
     // 1.创建表单解析对象
     const form = new formidable.IncomingForm();
     // 2.配置上传文件的存放位置
@@ -16,13 +16,22 @@ module.exports = (req, res)=>{
 		// 2.fields 对象类型 保存普通表单数据
 		// 3.files 对象类型 保存了和上传文件相关的数据
         // res.send(files.cover.path.split('public')[1])
-        await Article.create({
-            title: fields.title,
-            author: fields.author,
-            publishDate: fields.publishDate,
-            cover: files.cover.path.split('public')[1],
-            content: fields.content
-        })
+        try {
+            await Article.create({
+                title: fields.title,
+                author: fields.author,
+                publishDate: fields.publishDate,
+                cover: files.cover.path.split('public')[1],
+                content: fields.content
+            })
+        } catch (error) {
+            flag = true
+            console.log(error.message)
+            // 密码比对失败
+            let obj = {path : '/admin/article-edit', message:error.message}
+            return next(JSON.stringify(obj));
+            
+        }
         // 将页面重定向到文章列表页面
 		res.redirect('/admin/article');
     })
