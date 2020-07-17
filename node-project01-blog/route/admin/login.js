@@ -19,7 +19,10 @@ module.exports = async (req, res)=>{
         let isValid = await bcrypt.compare(password, user.password);
         if (isValid) {
             // 将用户名存储在请求对象中
-            req.session.username = user.username;
+			req.session.username = user.username;
+			// 将用户角色存储在session对象中
+            req.session.role = user.role;
+            
             req.app.locals.userInfo = user;
             // 重定向到用户列表页面
             res.redirect('/admin/user');
