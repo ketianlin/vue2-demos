@@ -7,7 +7,8 @@ module.exports = (req, res, next)=>{
         res.redirect('/admin/login');
     }else{
         // 如果用户是登录状态 并且是一个普通用户
-        if (req.session.role == 'normal') {
+        if (req.session.role == 'normal' && req.url != '/logout') {
+            // 前端也有退出的需求
             // 让它跳转到博客首页 阻止程序向下执行
             return res.redirect('/home/');
         }
