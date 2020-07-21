@@ -5,6 +5,8 @@ const path = require('path');
 
 const bodyParser = require('body-parser');
 
+const formidable = require('formidable');
+
 // 创建web服务器
 const app = express();
 
@@ -206,6 +208,31 @@ app.get('/areas', (req, res) => {
 	// 响应
 	res.send(areas[id] || []);
 });
+
+app.post('/formData', (req, res)=>{
+    // 创建formidable表单解析对象
+    const form = new formidable.IncomingForm();
+    // 解析客户端传递过来的FormData对象
+    form.parse(req, (err, fields, files)=>{
+        res.send(fields);
+    })
+})
+
+app.post('/upload', (req, res)=>{
+	// 创建formidable表单解析对象
+	let form = new formidable.IncomingForm();
+	// 设置客户端上传文件的存储路径
+	form.uploadDir = path.join(__dirname, 'public', 'uploads');
+	// 保留上传文件的后缀名字
+	form.keepExtensions = true;
+	// 解析客户端传递过来的FormData对象
+	form.parse(req, (error, fields, files)=>{
+		// 将客户端传递过来的文件地址响应到客户端
+		res.send({
+			path: files.attrName.path.split('public')[1]
+		});
+	})
+})
 
 // 监听端口
 app.listen(3000);
