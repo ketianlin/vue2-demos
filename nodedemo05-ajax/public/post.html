@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>post的请求</title>
+</head>
+<body>
+    <input type="button" value="post的ajax请求" id="btn_post"><br/><br/><br/>
+    <a href="/index.html">返回</a>
+</body>
+<script src="/js/ajax.js"></script>
+<script>
+    const btn = document.querySelector('#btn_post')
+    btn.onclick = function(){
+        ajax({
+            type : 'post',
+            url : '/getPostData',
+            data : {name : '阿三哥', age : 50, title : '就是喜欢这种耳屎在左右耳朵间滚来滚去的感觉太美了'},
+            success : function(data){
+                console.log(data)
+            }
+        })
+    }
+</script>
+</html>

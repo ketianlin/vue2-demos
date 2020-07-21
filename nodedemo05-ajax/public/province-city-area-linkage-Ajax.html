@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>省市区联动</title>
+    <link rel="stylesheet" href="/assets/bootstrap/dist/css/bootstrap.min.css">
+	<style type="text/css">
+		.container {
+			padding-top: 150px;
+		}
+	</style>
+</head>
+<body>
+    <div class="container">
+		<div class="form-inline">
+			<div class="form-group">
+				<select class="form-control" id="province"></select>
+			</div>
+			<div class="form-group">
+				<select class="form-control" id="city">
+					<option>请选择城市</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<select class="form-control" id="area">
+					<option>请选择县城</option>
+				</select>
+			</div>
+		</div>
+    </div>
+    <a style="margin-left: 200px;" class="btn btn-success" href="/index.html">返回</a>
+    <!-- 省份模板 -->
+	<script type="text/html" id="provinceTpl">
+		<option>请选择省份</option>
+		{{each province}}
+			<option value="{{$value.id}}">{{$value.name}}</option>
+		{{/each}}
+	</script>
+	<!-- 城市模板 -->
+	<script type="text/html" id="cityTpl">
+		<option>请选择城市</option>
+		{{each city}}
+			<option value="{{$value.id}}">{{$value.name}}</option>
+		{{/each}}
+	</script>
+	<!-- 县城模板 -->
+	<script type="text/html" id="areaTpl">
+		<option>请选择县城</option>
+		{{each area}}
+			<option value="{{$value.id}}">{{$value.name}}</option>
+		{{/each}}
+	</script>
+</body>
+<script src="/js/ajax.js"></script>
+<script src="/js/template-web.js"></script>
+<script>
+    // 获取省市区下拉框元素
+    var province = document.getElementById('province');
+    var city = document.getElementById('city');
+    var area = document.getElementById('area');
+    // 获取省份信息
+    ajax({
+        url : '/province',
+        success : function(data){
+            let html = template('provinceTpl', {province: data})
+            province.innerHTML = html
+        }
+    })
+    // 为省份的下拉框添加值改变事件
+    province.onchange = function(){
+        let id = this.value;
+
+        // 清空县城下拉框中的数据
+        let html = template('areaTpl', {area : []});
+        area.innerHTML = html;
+
+        if(id == '请选择省份'){
+            // 清空县城下拉框中的数据
+            let html = template('cityTpl', {city : []});
+            city.innerHTML = html;
+            return;
+        }
+
+        
+
+        // 根据省份id获取城市信息
+        ajax({
+            url : '/cities',
+            data : {id},
+            success : function(data){
+                let html = template('cityTpl', {city : data})
+                city.innerHTML = html;
+            }
+        })
+    }
+
+    // 为城市的下拉框添加值改变事件
+    city.onchange = function(){
+        let id = this.value;
+
+        if(id == '请选择城市'){
+            // 清空县城下拉框中的数据
+            let html = template('areaTpl', {area : []});
+            area.innerHTML = html;
+            return
+        }
+
+        
+
+        // 根据省份id获取城市信息
+        ajax({
+            url : '/areas',
+            data : {id},
+            success : function(data){
+                let html = template('areaTpl', {area : data})
+                area.innerHTML = html;
+            }
+        })
+    }
+</script>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ajax的请求</title>
+</head>
+<body>
+    <input type="button" value="ajax的ajax请求" id="btn_ajax"><br/><br/><br/>
+    <a href="/index.html">返回</a>
+</body>
+<script src="/js/ajax.js"></script>
+<script>
+    const btn = document.querySelector('#btn_ajax')
+    btn.onclick = function(){
+        ajax({
+            type : 'post',
+            url : '/getAjaxData',
+            header : {'Content-Type': 'application/json'},
+            data : {name : '阿三哥', age : 50, title : '就是喜欢这种ajax参数的感觉，太美了'},
+            success : function(data){
+                console.log(data)
+            }
+        })
+    }
+</script>
+</html>
