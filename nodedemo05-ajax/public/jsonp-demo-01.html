@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试封装jsonp</title>
+    <link rel="stylesheet" href="/assets/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <input id="btn1" type="button" value="测试jsonp1">
+    <input id="btn2" type="button" value="测试jsonp2">
+    <a style="margin-left: 200px;" class="btn btn-success" href="/index.html">返回</a>
+</body>
+<script>
+    function jsonp(options){
+        let script = document.createElement('script');
+        let params = '';
+        for(let attr in options.data){
+            params += '&' + attr + '=' + options.data[attr];
+        }
+        let fnName = 'myJsonp_' + Math.random().toString().replace('.', '');
+        script.src = options.url + '?callback=' + fnName + params
+        window[fnName] = options.success;
+        document.body.appendChild(script);
+        script.onload = function(){
+            document.body.removeChild(script);
+        }
+    }
+
+    let btn1 = document.querySelector('#btn1');
+    let btn2 = document.querySelector('#btn2');
+
+    btn1.onclick = function(){
+        jsonp({
+            url : 'http://localhost:3001/better',
+            data : {xx : 'oo', sb : 'fuck'},
+            success : function(data){
+                console.log('btn1的按钮调用')
+                console.log(data)
+            }
+        })
+    }
+
+    btn2.onclick = function(){
+        jsonp({
+            url : 'http://localhost:3001/better',
+            success : function(data){
+                console.log('btn2的按钮调用')
+                console.log(data)
+            }
+        })
+    }
+</script>
+</html>
