@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>访问非同源数据的服务器端解决方案</title>
+</head>
+<body>
+    <input id="btn1" type="button" value="测试访问非同源数据的服务器端解决方案">
+    <a style="margin-left: 200px;" href="/index.html">返回</a>
+</body>
+<script src="/js/ajax.js"></script>
+<script>
+    document.querySelector('#btn1').onclick = function(){
+        ajax({
+            url : '/cross123',
+            success : function(data){
+                console.log(data);
+            }
+        });
+    }
+</script>
+</html>

@@ -6,6 +6,9 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 const formidable = require('formidable');
+// 向其他服务器端请求数据的模块
+const request = require('request');
+const { response } = require('express');
 
 // 创建web服务器
 const app = express();
@@ -232,6 +235,14 @@ app.post('/upload', (req, res)=>{
 			path: files.attrName.path.split('public')[1]
 		});
 	})
+})
+
+app.get('/cross123', (req, res)=>{
+	request('http://localhost:3001/servercors', (err, response, body) => {
+		res.send(body);
+	});
+
+	// res.send('abc');
 })
 
 // 监听端口
