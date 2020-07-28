@@ -50,6 +50,27 @@ app.get('/servercors', (req, res)=>{
     res.send('来自3000的服务器端远程访问方式解决跨域问题');
 });
 
+app.post('/login', (req, res)=>{
+    let form = formidable.IncomingForm();
+    form.parse(req, (err, fields, files)=>{
+        const {username, password} = fields;
+        if(username == 'fuck' && password == '1'){
+            req.session.isLogin = true;
+            res.send({message: '登录成功'});
+        }else{
+            res.send({message: '登录失败, 用户名或密码错误'});
+        }
+    });
+})
+
+app.get('/checkLogin', (req, res)=>{
+    if(req.session.isLogin){
+        res.send({message: '处于登录状态'})
+	} else {
+		res.send({message: '处于未登录状态'})
+	}
+})
+
 // 监听端口
 app.listen(3001);
 // 控制台提示输出

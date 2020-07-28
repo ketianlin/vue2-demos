@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jsonp形式查询ip地址</title>
+	<link rel="stylesheet" href="/assets/bootstrap/dist/css/bootstrap.min.css">
+	<style type="text/css">
+		.container {
+			padding-top: 60px;
+		}
+	</style>
+</head>
+<body>
+    <div class="container">
+		显示IP地址为 120.36.72.139 的位置信息,<span id="idTestJson"></span>
+	</div>
+    <a style="margin-left: 200px;" class="btn btn-success" href="/index.html">返回</a>
+</body>
+<script src="https://www.viptijian.com/statics/new_pc/js/jquery.min.js"></script>
+<script>
+    
+    // function getnetip() {
+    //     var ipaddress = '218.26.21.100';
+    //     ipaddress = ipaddress.substring(1);
+    //     var getipurl = "http://apis.juhe.cn/ip/ip2addr?ip=218.26.21.100&dtype=&key=54d7b1689c44658a9b83a09250024450";
+    //     getipurl.replace("218.26.21.100", ipaddress);
+    //     console.log(getipurl)
+    //     // alert(getipurl);
+    // }
+    // getnetip();
+    // $(function(){
+    //     $.ajax({
+    //         url:'http://apis.juhe.cn/ip/ip2addr?ip=218.26.21.100&dtype=&key=54d7b1689c44658a9b83a09250024450',
+    //         dataType:'jsonp',
+    //         success:function(res){
+    //             console.log(res)
+    //         }
+    //     })
+    // })
+
+    
+    </script>
+    <script>
+    $(function(){
+        $.ajax({
+            url:'http://115.28.130.76:8100/zk-back-service/iplocation/getiplocation?ip=59.56.83.52',
+            dataType:'html',
+            success:function(res){
+                console.log(res)
+            }
+        })
+    })
+    </script>
+</html>
