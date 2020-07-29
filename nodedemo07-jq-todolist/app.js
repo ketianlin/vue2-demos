@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({extended: false}));
 
 // 数据库连接
-mongoose.connect('mongodb://itcast:itcast@localhost:27017/todo', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb://itcast:itcast@localhost:27017/todo', {useNewUrlParser: true, useUnifiedTopology: true })
 
 // 导入todo路由案例
 const todoRouter = require('./route/todo');
