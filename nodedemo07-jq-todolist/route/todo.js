@@ -72,5 +72,31 @@ todoRouter.post('/modifyTask', async(req, res)=>{
 	res.send(task);
 })
 
+// 查询未完成任务数量
+todoRouter.get('/unCompletedTaskCount', async (req, res) => {
+	// 执行查询操作
+	const result = await Task.countDocuments({completed: false});
+	// 响应
+	res.send({num: result})
+});
+
+// 更改任务全部状态
+todoRouter.get('/changeAllTasksComplete', async (req, res) => {
+	// 状态
+	const { status } = req.query;
+	// 执行更改状态操作
+	const result = await Task.updateMany({}, {completed: status});
+	// 响应
+	res.send(result);
+});
+
+// 清除已完成任务
+todoRouter.get('/clearTask', async (req, res) => {
+	// 执行清空操作
+	const result = await Task.deleteMany({completed: true});
+	// 返回清空数据
+	res.send(result);
+});
+
 // 将todo案例路由作为模块成员进行导出
 module.exports = todoRouter;

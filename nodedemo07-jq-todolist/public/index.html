@@ -17,12 +17,13 @@
 			<!-- This section should be hidden by default and shown when there are todos -->
 			<section class="main">
 				<input class="toggle-all" type="checkbox">
+				<label for="toggle-all">Mark all as complete</label>
 				<ul class="todo-list" id="todo-list"></ul>
 			</section>
 			<!-- This footer should hidden by default and shown when there are todos -->
 			<footer class="footer">
 				<!-- This should be `0 items left` by default -->
-				<span class="todo-count"><strong>0</strong> item left</span>
+				<span class="todo-count"><strong id="count">0</strong> item left</span>
 				<!-- Remove this if you don't implement routing -->
 				<ul class="filters">
 					<li>
@@ -63,6 +64,8 @@
 		var taskBox = $('#todo-list');
 		// 添加任务的文本框
 		var taskInp = $('#task');
+		// 用于存储未完成任务数量的strong标签
+		var strong = $('#count');
 
 		// 拼接字符串 将拼接好的字符串显示在页面中
 		function render(){
@@ -77,13 +80,13 @@
 		// 用于计算未完成任务的数量
 		function calcCount(){
 			// 存储结果的变量
-			
+			let count = 0;
 			// 将未完成的任务过滤到一个新的数组中
-			
+			let newAry = taskAry.filter(item => item.completed == false);
 			// 将新数组的长度赋值给count
-			
+			count = newAry.length;
 			// 将未完成的任务数量显示在页面中
-			
+			strong.text(count);
 		}
 
 		// 向服务器端发送请求 获取已经存在的任务
@@ -95,6 +98,8 @@
 				taskAry = response;
 				// 拼接字符串 将拼接好的字符串显示在页面中
 				render();
+				// 计算未完成任务数量
+				calcCount ();
 			}
 		})
 
@@ -164,6 +169,41 @@
 					let task = taskAry.find(item => item._id = id)
 					// 更改任务状态
 					task.completed = response.completed;
+					// 重新将任务数组中的元素显示在页面中
+					render();
+					// 计算未完成任务数量
+					calcCount();
+				}
+			})
+		});
+	
+		// 当双击事件名称的时候触发
+		taskBox.on('dblclick', 'label', function () {
+			// 让任务处于编辑状态
+			$(this).parent().parent().addClass('editing');
+			// 将任务名称显示在文本框中
+			$(this).parent().siblings('input').val($(this).text());
+			// 让文本框获取焦点
+			$(this).parent().siblings('input').focus();
+		})
+
+		// 当文本框离开焦点的时候
+		taskBox.on('blur', '.edit', function () {
+			// 最新的任务名称
+			var newTaskName = $(this).val();
+			// 编辑任务的id
+			var id = $(this).siblings().find('button').attr('data-id');
+			// 向服务器端发送请求 修改任务名称
+			$.ajax({
+				url: '/todo/modifyTask',
+				type: 'post',
+				data: JSON.stringify({_id: id, title: newTaskName}),
+				contentType: 'application/json',
+				success : function(response){
+					// 将任务状态同步到任务数组中
+					let task = taskAry.find(item => item._id = id)
+					// 修改任务名称
+					task.title = response.title;
 					// 重新将任务数组中的元素显示在页面中
 					render();
 					// 计算未完成任务数量
