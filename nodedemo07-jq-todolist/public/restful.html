@@ -18,6 +18,7 @@
             <li><input type="button" value="post方式" id="btn_post" class="btn btn-info"><span></span></li>
             <li><input type="button" value="put方式" id="btn_put" class="btn btn-primary"><span></span></li>
             <li><input type="button" value="delete方式" id="btn_delete" class="btn btn-success"><span></span></li>
+            <li><input type="button" value="xml介绍" id="btn_xml" class="btn btn-warning"><span></span></li>
         </ul>
     </div>
 </body>
@@ -87,6 +88,20 @@
                 url:'/users/25',
                 success:function(res){
                     sender.siblings().html(JSON.stringify(res))
+                }
+            })
+        })
+        $('#btn_xml').on('click', function(){
+            let sender = $(this)
+            $.ajax({
+                type:'get',
+                url:'/xml',
+                success:function(res){
+                    let title = res.getElementsByTagName('title')[0].innerHTML;
+                    let content = res.getElementsByTagName('content')[0].innerHTML;
+                    let html = `title=${title},content=${content}`
+                    // console.log(res)
+                    sender.siblings().html(JSON.stringify(html))
                 }
             })
         })

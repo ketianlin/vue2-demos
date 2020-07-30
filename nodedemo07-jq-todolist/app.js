@@ -68,8 +68,10 @@ app.put('/users/:id', (req, res) => {
 });
 
 app.get('/xml', (req, res) => {
-	res.header('content-type', 'text/xml');
-	res.send('<message><title>消息标题</title><content>消息内容</content></message>')
+    setTimeout(function(){
+        res.header('content-type', 'text/xml');
+        res.send('<message><title>消息标题</title><content>消息内容</content></message>')
+    },3000)
 });
 
 app.listen(3005);
