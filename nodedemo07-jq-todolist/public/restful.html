@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>查看restful风格的api</title>
+    <link rel="stylesheet" href="https://getbootstrap.com/docs/4.5/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/js/nprogress/nprogress.css">
+    <style>
+        li{margin: 10px;}
+    </style>
+</head>
+<body>
+    <div>
+        <ul>
+            <li><input type="button" value="get方式列表" id="btn_get" class="btn btn-danger"><span></span></li>
+            <li><input type="button" value="get方式取当个" id="btn_get_one" class="btn btn-dark"><span></span></li>
+            <li><input type="button" value="post方式" id="btn_post" class="btn btn-info"><span></span></li>
+            <li><input type="button" value="put方式" id="btn_put" class="btn btn-primary"><span></span></li>
+            <li><input type="button" value="delete方式" id="btn_delete" class="btn btn-success"><span></span></li>
+        </ul>
+    </div>
+</body>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/nprogress/nprogress.js"></script>
+<script>
+    $(function(){
+        // 当页面中有ajax请求发送时触发
+        $(document).on('ajaxStart', function () {
+                NProgress.start() 
+        })
+
+        // 当页面中有ajax请求完成时触发
+        $(document).on('ajaxComplete', function () {
+            NProgress.done() 
+        })
+
+        $('#btn_get').on('click', function(){
+            let sender = $(this)
+            $.ajax({
+                type:'get',
+                url:'/users',
+                success:function(res){
+                    sender.siblings().html(JSON.stringify(res))
+                }
+            })
+        })
+        $('#btn_get_one').on('click', function(){
+            let sender = $(this)
+            $.ajax({
+                type:'get',
+                url:'/users/25',
+                success:function(res){
+                    sender.siblings().html(JSON.stringify(res))
+                    // console.log(res)
+                }
+            })
+        })
+        $('#btn_post').on('click', function(){
+            let sender = $(this)
+            $.ajax({
+                type:'post',
+                url:'/users',
+                data : {id:'256', title:'我是post的标题', content:'我是post的内容，看好了'},
+                success:function(res){
+                    sender.siblings().html(JSON.stringify(res))
+                    // console.log(res)
+                }
+            })
+        })
+        $('#btn_put').on('click', function(){
+            let sender = $(this)
+            $.ajax({
+                type:'put',
+                url:'/users/25',
+                data : {id:'256', title:'我是put方式提交的标题', content:'我是put方式提交的内容，看好了'},
+                success:function(res){
+                    sender.siblings().html(JSON.stringify(res))
+                    // console.log(res)
+                }
+            })
+        })
+        $('#btn_delete').on('click', function(){
+            let sender = $(this)
+            $.ajax({
+                type:'delete',
+                url:'/users/25',
+                success:function(res){
+                    sender.siblings().html(JSON.stringify(res))
+                }
+            })
+        })
+    })
+</script>
+</html>
