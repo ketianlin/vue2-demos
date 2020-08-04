@@ -1,32 +1,29 @@
-const { User, validateXXX, validateLogin } = require('../../../model/User');
+const { User, validateUser } = require('../../../model/User');
 // hash密码
 const bcrypt = require('bcrypt');
 // 工具
 const _ = require('lodash');
 
-
 module.exports = async (req, res)=>{
     // 数据格式校验
-    const { error } = validateXXX(req.fields);
-    console.log(error)
-    // 格式不符合要求
-	if (error) {
-        return res.status(400).send({message: error.message})
-    }
-    // // 查找用户
-    // let user = await User.findOne({email: req.fields.email});
-    // // 如果用户不存在 响应
-	// if ( ! user){
-    //     return res.status(400).send({message: '邮箱地址或者密码错误'});
-    // }
-    // // 如果用户存在 验证密码 返回布尔值
-    // const validPassword = await bcrypt.compare(req.fields.password, user.password);
-    // // 密码错误 响应
-    // if ( ! validPassword){
-    //     return res.status(400).send({message: '邮箱地址或者密码错误'});
-    // }
-    // // 将用户信息存储在session中
-	// req.session.userInfo = user;
-    // // 响应
-	// res.send(_.pick(user, ['nickName', 'email', 'role', 'avatar', '_id', 'status', 'createTime']));
+    const { error } = validateUser(req.fields);
+    console.log(error);
+	// 格式不符合要求
+	if (error) return res.status(400).send({message: error.message});
+	// 格式符合要求 继续向下执行
+	// 查询用户
+	let user = await User.findOne({email: req.fields.email});
+	// 用户已存在
+	if (user) return res.status(400).send({message: '邮箱已经被注册'});
+	// 用户不存在 可以正常执行注册流程
+	// 生成盐
+	const salt = await bcrypt.genSalt(10);
+	// 使用盐对密码进行加密
+	req.fields.password = await bcrypt.hash(req.fields.password, salt);
+	// 创建用户
+	user = new User(req.fields);
+	// 保存用户
+	await user.save();
+	// 响应
+	res.send(_.pick(user, ['_id', 'email', 'nickName', 'role', 'avatar', 'createTime', 'status']));
 };

@@ -57,7 +57,7 @@ const UserSchema = new Schema({
 const User = mongoose.model('User', UserSchema);
 
 // 注册数据格式校验
-const validateXXX = async (user) => {
+const validateUser = async (user) => {
 	// 定义对象验证规则
 	const schema = Joi.object({
 		nickName: Joi.string().min(2).max(30).required().error(new Error('用户名不符合验证规则')),
@@ -135,6 +135,5 @@ async function createUser(){
 module.exports = {
 	User,
 	validateLogin,
-	validateXXX
-	
+	validateUser
 };
