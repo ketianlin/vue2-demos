@@ -9,7 +9,7 @@ module.exports = async (req, res)=>{
     const { error } = validateLogin(req.fields);
     // 格式不符合要求
 	if (error) {
-        return res.status(400).send({message: error.message})
+        return res.status(400).send({message: 'err='+error.message})
     }
     // 查找用户
     let user = await User.findOne({email: req.fields.email});

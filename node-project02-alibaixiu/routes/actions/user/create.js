@@ -4,10 +4,9 @@ const bcrypt = require('bcrypt');
 // 工具
 const _ = require('lodash');
 
-module.exports = async (req, res)=>{
-    // 数据格式校验
-    const { error } = validateUser(req.fields);
-    console.log(error);
+module.exports = async (req, res) => {
+	// 数据格式校验
+	const { error } = validateUser(req.fields);
 	// 格式不符合要求
 	if (error) return res.status(400).send({message: error.message});
 	// 格式符合要求 继续向下执行
