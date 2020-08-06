@@ -64,7 +64,7 @@ const validateUser = user => {
 		email: Joi.string().regex(/^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/).required().error(new Error('邮箱不符合验证规则')),
 		password: Joi.string().required().regex(/^[a-zA-Z0-9]{3,30}$/).error(new Error('密码不符合验证规则')),
 		status: Joi.number().valid(0, 1),
-		role: Joi.string().valid('normal', 'admin')
+		role: Joi.string().valid('normal', 'admin').error(new Error('必须是normal和admin两张角色'))
 	};
 	// 验证
 	return Joi.validate(user, schema, {
@@ -89,24 +89,24 @@ const validateLogin = user => {
 	});
 }
 
-User.findOne({'email': 'asange@qq.cn'}).then(async result => {
-	if (result == null) {
-		// 生成盐
-		const salt = await bcrypt.genSalt(10);
-		// 使用盐对密码进行加密
-		const password = await bcrypt.hash('123456', salt);
+// User.findOne({'email': 'asange@qq.cn'}).then(async result => {
+// 	if (result == null) {
+// 		// 生成盐
+// 		const salt = await bcrypt.genSalt(10);
+// 		// 使用盐对密码进行加密
+// 		const password = await bcrypt.hash('123456', salt);
 
-		const user = await User.create({
-			nickName: '阿三哥开挂了',
-			email: 'asange@qq.cn',
-			password: password,
-			role: 'admin',
-			avatar: null,
-			createTime: new Date,
-			status: 1
-		});
-	}
-})
+// 		const user = await User.create({
+// 			nickName: '阿三哥开挂了',
+// 			email: 'asange@qq.cn',
+// 			password: password,
+// 			role: 'admin',
+// 			avatar: null,
+// 			createTime: new Date,
+// 			status: 1
+// 		});
+// 	}
+// })
 
 // 导出对象
 module.exports = {

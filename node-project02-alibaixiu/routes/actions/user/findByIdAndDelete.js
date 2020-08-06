@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
 		// 通过验证
 		for (const item of ids) {
 			// 删除用户
-			let user = await User.findOneAndDelete(item);
+			let user = await User.findByIdAndDelete(item);
 			// 将删除的用户存储在数组中
 			result.push(user);
 			// 如果缩略图存在
