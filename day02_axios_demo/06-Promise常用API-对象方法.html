@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>06-Promise常用API-对象方法</title>
+</head>
+<body>
+    
+</body>
+<script>
+    function queryData(url){
+        return new Promise(function(resolve, reject){
+            let xhr = new XMLHttpRequest();
+            xhr.open('get', url);
+            xhr.send(null);
+            xhr.onload = function(){
+                if(xhr.status == 200){
+                    resolve(xhr.responseText);
+                }else{
+                    reject('服务器出错');
+                }
+            }
+        });
+    }
+
+    let p1 = queryData('http://localhost:3000/a1');
+    let p2 = queryData('http://localhost:3000/a2');
+    let p3 = queryData('http://localhost:3000/a3');
+    Promise.all([p1, p2, p3]).then(function(result){
+        console.log(result);
+    });
+
+    Promise.race([p1, p2, p3]).then(function(result){
+        console.log(result);
+    });
+</script>
+</html>

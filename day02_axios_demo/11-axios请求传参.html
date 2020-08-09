@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11-axios请求传参</title>
+</head>
+<body>
+    <ul>
+        <li>axios get请求传参-传统：<span id="li_get"></span></li>
+        <li>axios get请求传参-restful：<span id="li_get2"></span></li>
+        <li>axios get请求传参-params：<span id="li_get3"></span></li>
+        <li>axios delete 请求传参：<span id="li_delete"></span></li>
+        <li>axios post 请求传参：<span id="li_post"></span></li>
+        <li>axios URLSearchParams 请求传参：<span id="li_post2"></span></li>
+        <li>axios put 请求传参：<span id="li_put"></span></li>
+    </ul>
+</body>
+<script type="text/javascript" src="js/axios.js"></script>
+<script type="text/javascript">
+    // axios get请求传参
+    axios.get('http://localhost:3000/axios?id=123').then(function(ret){
+        document.querySelector('#li_get').innerHTML = ret.data;
+    })
+    axios.get('http://localhost:3000/axios/123').then(function(ret){
+        document.querySelector('#li_get2').innerHTML = ret.data;
+    })
+    axios.get('http://localhost:3000/axios', {
+      params: {
+        id: 789
+      }
+    }).then(function(ret){
+        document.querySelector('#li_get3').innerHTML = ret.data;
+    })
+
+    // axios delete 请求传参
+    axios.delete('http://localhost:3000/axios', {
+      params: {
+        id: 111
+      }
+    }).then(function(ret){
+        document.querySelector('#li_delete').innerHTML = ret.data;
+    })
+
+    axios.post('http://localhost:3000/axios', {
+      uname: 'lisi',
+      pwd: 123
+    }).then(function(ret){
+        document.querySelector('#li_post').innerHTML = ret.data;
+    })
+
+    var params = new URLSearchParams();
+    params.append('uname', 'zhangsan');
+    params.append('pwd', '111');
+    axios.post('http://localhost:3000/axios', params).then(function(ret){
+        document.querySelector('#li_post2').innerHTML = ret.data;
+    })
+
+    // axios put 请求传参
+    axios.put('http://localhost:3000/axios/123', {
+      uname: 'lisi',
+      pwd: 123
+    }).then(function(ret){
+        document.querySelector('#li_put').innerHTML = ret.data;
+    })
+
+</script>
+</html>

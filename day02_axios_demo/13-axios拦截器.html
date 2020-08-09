@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13-axios拦截器</title>
+</head>
+<body>
+    <div id="result_div"></div>
+</body>
+<script type="text/javascript" src="js/axios.js"></script>
+<script type="text/javascript">
+    /*
+      axios拦截器
+    */
+    axios.interceptors.request.use(function(config) {
+        console.log(config.url)
+        // config.headers.mytoken = 'nihao';
+        return config;
+    }, function(err){
+        console.log(err);
+    })
+
+    axios.interceptors.response.use(function(res) {
+      // console.log(res)
+      var data = res.data;
+      return data;
+    }, function(err){
+      console.log(err)
+    })
+    axios.get('http://localhost:3000/adata').then(function(data){
+        // 注意data属性是固定的用法，用于获取后台的实际数据
+        document.querySelector('#result_div').innerHTML = data;
+    })
+
+</script>
+</html>

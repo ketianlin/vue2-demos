@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01-异步编程与Promise概述</title>
+</head>
+<body>
+    <div>前后端交互</div>
+</body>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript">
+    $.ajax({
+      url: 'http://localhost:3000/data',
+      success: function(data) {
+        console.log(data)
+        $.ajax({
+          url: 'http://localhost:3000/data1',
+          success: function(data) {
+            console.log(data)
+            $.ajax({
+              url: 'http://localhost:3000/data2',
+              success: function(data) {
+                console.log(data)
+              }
+            });
+          }
+        });
+      }
+    });
+</script>
+</html>

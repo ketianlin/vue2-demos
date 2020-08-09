@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10-axios基本用法</title>
+</head>
+<body>
+    <div id="result_div"></div>
+</body>
+<script type="text/javascript" src="js/axios.js"></script>
+<script type="text/javascript">
+    axios.get('http://localhost:3000/adata').then(function(data){
+        // 注意data属性是固定的用法，用于获取后台的实际数据
+        document.querySelector('#result_div').innerHTML = data.data;
+    })
+
+</script>
+</html>

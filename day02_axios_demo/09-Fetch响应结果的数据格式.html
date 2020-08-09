@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>09-Fetch响应结果的数据格式</title>
+</head>
+<body>
+    <div id="result_div"></div> 
+</body>
+<script>
+    fetch('http://localhost:3000/json').then(function(data){
+        return data.json();
+    }).then(function(data){
+        document.querySelector('#result_div').innerHTML = data.uname + '|' + data.age + '|' + data.gender
+    })
+</script>
+</html>

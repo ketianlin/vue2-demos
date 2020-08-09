@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03-基于Promise发送Ajax请求并解决回调地狱问题</title>
+</head>
+<body>
+    
+</body>
+<script>
+    /*
+      基于Promise发送Ajax请求
+    */
+    function queryData(url){
+        return new Promise(function(resolve, reject){
+            let xhr = new XMLHttpRequest();
+            xhr.open('get', url);
+            xhr.send(null);
+            xhr.onload = function(){
+                if(xhr.status == 200){
+                    resolve(xhr.responseText);
+                }else{
+                    reject('服务器出错');
+                }
+            }
+        });
+    }
+
+    // queryData('http://localhost:3000/data')
+    //     .then(function(data){
+    //         console.log('then='+data)
+    //     }).catch(function(data){
+    //         console.log('catch='+data)
+    //     })
+
+    // 发送多个ajax请求并且保证顺序
+    queryData('http://localhost:3000/data')
+        .then(function(data){
+            console.log(data);
+            return queryData('http://localhost:3000/data1');
+        })
+        .then(function(data){
+            console.log(data);
+            return queryData('http://localhost:3000/data2');
+        })
+        .then(function(data){
+            console.log(data)
+        })
+</script>
+</html>
