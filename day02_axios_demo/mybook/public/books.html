@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+      .grid {
+        margin: auto;
+        width: 530px;
+        text-align: center;
+      }
+      .grid table {
+        border-top: 1px solid #C2D89A;
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .grid th,td {
+        padding: 10;
+        border: 1px dashed #F3DCAB;
+        height: 35px;
+        line-height: 35px;
+      }
+      .grid th {
+        background-color: #F3DCAB;
+      }
+      .grid .book {
+        padding-bottom: 10px;
+        padding-top: 5px;
+        background-color: #F3DCAB;
+      }
+      .grid .total {
+        height: 30px;
+        line-height: 30px;
+        background-color: #F3DCAB;
+        border-top: 1px solid #C2D89A;
+      }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="grid">
+            <div>
+                <h1>图书管理</h1>
+                <div class="book">
+                    <div>
+                        <label for="id">编号：</label>
+                        <input type="text" v-model="id" :disabled="isEdit" disabled="false" v-focus>
+                        <label for="name">名称：</label>
+                        <input type="text" v-model="name">
+                        <button @click='handle' :disabled="submitFlag">提交</button>
+                    </div>
+                </div>
+            </div>
+            <div class="total">
+              <span>图书总数：</span>
+              <span>{{total}}</span>
+            </div>
+            <table>
+                <thead>
+                  <tr>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>时间</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in books" :key="item.id">
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.date | format('yyyy-MM-dd hh:mm:ss')}}</td>
+                    <td>
+                      <a href="" @click.prevent='toEdit(item.id)'>修改</a>
+                      <span>|</span>
+                      <a href="" @click.prevent='deleteBook(item.id)'>删除</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+        
+        </div>
+    </div>
+</body>
+<script src="/js/vue.js"></script>
+<script src="/js/axios.js"></script>
+<script src="/js/time.js"></script>
+<script>
+    // 配置请求的基准URL地址
+    axios.defaults.baseURL = 'http://localhost:3000/';
+    axios.interceptors.response.use(function(res) {
+      // console.log(res)
+      var data = res.data;
+      return data;
+    }, function(err){
+      console.log(err)
+    })
+
+    Vue.directive('focus', {
+      inserted : function(el){
+        el.focus()
+      }
+    })
+    const vm = new Vue({
+        el : '#app',
+        data : {
+            id : '',
+            name : '',
+            isEdit : false,
+            submitFlag: false,
+            books : []
+        },
+        filters : {
+          format : function(val, ...args){
+            return dateFormat(val, args[0])
+          }
+        },
+        methods: {
+            async handle(){
+              if (this.isEdit) {
+                // 编辑图书
+                let ret = await axios.put('books/'+this.id, {
+                  name: this.name
+                })
+                if (ret.status == 200) {
+                  this.loadData();
+                }
+                this.isEdit = false
+              }else{
+                // 添加图书
+                let ret = await axios.post('books', {
+                  name: this.name
+                });
+                if(ret.status == 200){
+                  this.loadData();
+                }
+              }
+              this.id = ''
+              this.name = ''
+            },
+            toEdit(id){
+              const book = this.books.find(item=>item.id==id)
+              this.id = book.id
+              this.name = book.name
+              this.isEdit = true
+            },
+            async deleteBook(id){
+                if ( ! confirm('确定要删除吗？')) {
+                    return
+                }
+                let ret = await axios.delete('books/'+id);
+                if(ret.status == 200){
+                  this.loadData();
+                }
+            },
+            async loadData(){
+                this.books = await axios.get('books');
+                console.log(this.books)
+            }
+        },
+        watch: {
+          name : async function(val){
+            // 验证图书名称是否已经存在
+            let ret = await axios.get('/books/book/' + this.name)
+            console.log(ret)
+            if (ret.status == 1) {
+              // 图书名称存在
+              this.submitFlag = true
+            }else{
+              // 图书名称不存在
+              this.submitFlag = false
+            }
+          }
+        },
+        mounted() {
+            this.loadData()
+        },
+        computed: {
+          total(){
+            return this.books.length
+          }
+        }
+    })
+</script>
+</html>
