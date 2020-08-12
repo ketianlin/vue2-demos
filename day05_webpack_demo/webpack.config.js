@@ -7,6 +7,8 @@ const htmlPlugin = new HtmlWebpackPlugin({
     filename:'index.html' // 指定生成的文件的名称，该文件存在于内存中，在目录中不显示
 });
 
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+
 module.exports = {
     // 编译模式
     mode:'development', // development|production
@@ -16,7 +18,8 @@ module.exports = {
         filename:'bundle.js'
     },
     plugins:[
-        htmlPlugin
+        htmlPlugin,
+        new VueLoaderPlugin()
     ],
     // 所有第三方文件模块的匹配规则
     module:{
@@ -27,7 +30,9 @@ module.exports = {
             {
                 test: /\.jpg|png|gif|bmp|ttf|eot|svg|woff|woff2$/,
                 use: 'url-loader?limit=16941'
-            }
+            },
+            {test: /\.js$/, use: 'babel-loader', exclude: /node_modules/},
+            { test: /\.vue$/, use: 'vue-loader'}
         ]
     }
 }
